@@ -48,9 +48,9 @@ const userSchema = new Schema(
     timestamps:true
   }
 )
-userSchema.pre("save",async function (next){
-  if(this.modified("password")) return next();
-  this.password = bcrypt.hash(this.password, 10)
+userSchema.pre("save",async function (next){  // this is mongoose middle ware and its goes like run the function before saving data (passoword) 
+  if(this.isModified("password")) return next(); // if pass field has not changed return next fn
+  this.password = await bcrypt.hash(this.password, 10)  // if changed then hash it using bcrpyt using 10 rounds of salts
   next();
 })
 
@@ -93,4 +93,4 @@ userSchema.methods.generateRefreshTokens = function () {
 
 
 
-export const user = mongoose.model("User",userSchema)
+export const User = mongoose.model("User",userSchema)
